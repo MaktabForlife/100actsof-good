@@ -1,6 +1,6 @@
 # Cloudflare for SaaS custom hostname
 
-Prepared configuration; activation and live validation are pending Cloudflare checkout approval.
+Activated and verified on 18 November 2026. The SaaS fallback origin, custom hostname and managed TLS certificate are Active. HTTPS page, all three zone logbooks, same-origin backend requests and the Team Log PDF were verified on the academy address.
 
 The existing Worker and D1 database serve both hostnames. The academy hostname is a Cloudflare for SaaS custom hostname in the provider zone; it is not a separate Worker custom domain in the academy account.
 
@@ -15,7 +15,11 @@ The existing Worker and D1 database serve both hostnames. The academy hostname i
 | Customer zone | `ummabbadacademy.app` / `28f9da77d7124e6343cfee405af7bd41` |
 | Customer account | `c9a3e355b3d7a795880b1d36a1dbe123` |
 | Customer DNS | Proxied `CNAME` → `100actsofgood.hifz-helper.app` |
-| Certificate | Managed DV, HTTP validation |
+| Certificate | Managed DV, HTTP validation, minimum TLS 1.2 |
+| SaaS hostname ID | `8bf9bd1c-8876-4c35-92f3-9c4d2a3b13f0` |
+| Certificate ID | `2f86c8aa-fe16-46be-a148-0972022c6d52` |
+| Provider route ID | `420549dc586e4023945add41c50c67fc` |
+| Academy route ID | `b1a5d329124844d38b387bb88d4669bb` |
 
 ## Routing
 
@@ -26,13 +30,18 @@ The Worker custom domain keeps the provider address working. Two exact Worker ro
 
 The routes are declared in `wrangler.jsonc`. No zone-wide wildcard route is needed, so other applications on `hifz-helper.app` keep their existing routing.
 
-## Activation and validation
+## Provisioning and future validation
 
-1. Activate Cloudflare for SaaS in the provider zone after the account owner approves Cloudflare's checkout terms and usage billing authorization. The displayed base charge is $0, with 100 custom hostnames included; additional usage is subject to Cloudflare pricing.
+The account owner approved Cloudflare’s Terms and usage billing authorization before activation. The base charge shown at activation was $0. Only the academy hostname above was added.
+
+
+1. Activate Cloudflare for SaaS in the provider zone after the account owner approves Cloudflare's checkout terms and usage billing authorization. Check current billing terms and included allowances before adding more hostnames.
 2. Set the provider hostname above as the SaaS fallback origin and wait for Active.
 3. Add the academy hostname with managed DV and HTTP certificate validation. Publish any ownership validation records Cloudflare requests in the customer zone.
 4. Deploy the exact Worker routes. Keep the customer CNAME pointed at the provider address.
 5. Verify both hostname and certificate statuses are Active, then verify the page, PDF assets, and `/api/logbook` on the academy address.
+
+DNS, SaaS activation and certificate settings are managed in the Cloudflare dashboard. Worker routes are also kept in `wrangler.jsonc` so future deployments preserve them.
 
 ## Data
 

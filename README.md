@@ -12,15 +12,16 @@ A team logbook for Umm Abbad Academy. The artwork, example acts, hadith referenc
 | D1 database | `acts-of-good-production` |
 | Database ID | `35e77ced-b8c0-4fdd-bbb7-3c52d5a0e720` |
 | Worker | `acts-of-good` |
-| Production hostname | `100actsofgood.hifz-helper.app` |
+| Academy hostname | `100actsofgood.ummabbadacademy.app` |
+| Provider hostname | `100actsofgood.hifz-helper.app` |
 
-The account, database and custom domain are declared in `wrangler.jsonc`. The deployed application uses the D1 binding `DB`. No Sites or ChatGPT sign-in service is required by this version.
+The account, database, provider custom domain and SaaS Worker routes are declared in `wrangler.jsonc`. Cloudflare for SaaS serves the academy hostname through the same Worker and database. See [custom-domain setup](docs/custom-domain.md) for resource IDs and validation details. The deployed application uses the D1 binding `DB`. No Sites or ChatGPT sign-in service is required by this version.
 
 ## Features
 
 - First-visit Zone 1, Zone 2 or Zone 3 selection, remembered in this browser. No registration, password or session is required. A Change zone button lets users choose again.
 - Exactly one shared logbook and 100-drop tracker per zone. No team creation or team selector.
-- Cover fields: team name, members, class and start date.
+- Cover fields: zone members, class and start date.
 - Numbered acts with circle, date, the act, how we lived it, inspiring hadith and full reference.
 - Browser drafts are saved per zone and team on the device and restored after reload. They are cleared only after the backend acknowledges saving.
 - Saved acts are read-only. Both the API and D1 triggers reject updates and deletion. Hadith text and references are preserved as snapshots.
