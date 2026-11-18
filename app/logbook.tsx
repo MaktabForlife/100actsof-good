@@ -78,7 +78,7 @@ export default function Logbook({zone,onChangeZone}:{zone:ZoneId;onChangeZone:()
 
   return <div className="app-shell">
     <aside className={`sidebar ${menu ? 'open' : ''}`}>
-      <a className="brand" href="#" onClick={e=>{e.preventDefault();navigate('logbook');}}><img className="brand-logo" src="/artwork/academy-logo.png" alt=""/><span>Umm Abbad<span>ACADEMY</span></span></a>
+      <a className="brand" href="#" onClick={e=>{e.preventDefault();navigate('logbook');}}><div className="brand-icon"><Blossom className="brand-flower"/></div><span>Umm Abbad<span>ACADEMY</span></span></a>
       <div className="sidebar-rule"/>
       <p className="eyebrow nav-label">THE RIPPLE EFFECT</p>
       <nav aria-label="Main navigation">{nav.map(({ id, icon: Icon, label })=><button key={id} className={`nav-item ${page===id?'active':''}`} onClick={()=>navigate(id)}><Icon size={19} strokeWidth={1.5}/>{label}{id==='hadith'&&data.hadiths.length>0&&<span className="nav-count">{data.hadiths.length}</span>}</button>)}</nav>
