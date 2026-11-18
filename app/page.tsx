@@ -1,2 +1,2 @@
-import AccountGate from './account-gate';
-export default function Home(){return <AccountGate/>;}
+import ZoneGate from './zone-gate';
+export default function Home(){return <ZoneGate/>;}

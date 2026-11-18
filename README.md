@@ -18,12 +18,15 @@ The account, database and custom domain are declared in `wrangler.jsonc`. The de
 
 ## Features
 
-- Separate student or team accounts, with password hashing, session cookies and server-side record ownership checks.
+- First-visit Zone 1, Zone 2 or Zone 3 selection, remembered in this browser. No registration, password or session is required. A Change zone button lets users choose again.
 - Team cover fields: team name, members, class and start date.
 - Numbered acts with circle, date, the act, how we lived it, inspiring hadith and full reference.
+- Browser drafts are saved per zone and team on the device and restored after reload. They are cleared only after the backend acknowledges saving.
+- Saved acts are read-only. Both the API and D1 triggers reject updates and deletion. Hadith text and references are preserved as snapshots.
+- A draft ID makes retries idempotent, avoiding duplicate records after a dropped response.
 - All acts remain expanded, with the newest saved entry first.
 - Mobile-first paper styling follows the PDF. On mobile, View tracker opens the numbered 100-drop tracker; desktop shows it below all entries.
-- The academy-wide shared goal counts completed acts across accounts.
+- The academy-wide shared goal counts completed acts across zones.
 - Hadith research collections and the three Jalsa Day Reflection prompts.
 - CSV, complete JSON backup, and a printable report containing all saved fields.
 - Original Student Guidelines and Team Log downloads, including proofread reference text.
@@ -49,7 +52,7 @@ npm test
 npm run build
 ```
 
-With the local server running, `node tests/integration.mjs` creates test-only accounts and verifies sign-in, session invalidation, team ownership, CSRF rejection, the Team Log fields and numbered acts. It refuses non-loopback targets. Never run test account creation against production.
+With the local server running, `node tests/integration.mjs` creates a local test team and verifies password-free zone access, zone scoping, origin validation, immutable entries, retry deduplication, the Team Log fields and numbered acts. It refuses non-loopback targets. Never run test record creation against production.
 
 ## Deployment
 
@@ -59,15 +62,15 @@ Sign in to Wrangler with access to the account listed above. The required Cloudf
 npm run deploy
 ```
 
-The deploy script verifies the approved account and database IDs, checks types and security tests, applies pending schema migrations to that exact database, builds the app, and deploys its custom domain. The initial two migrations were applied in the account's D1 dashboard and recorded in `d1_migrations`.
+The deploy script verifies the approved account and database IDs, checks types and security tests, applies pending schema migrations to that exact database, builds the app, and deploys its custom domain. The initial migrations were applied in the account's D1 dashboard and recorded in `d1_migrations`.
 
 Cloudflare Workers Builds can also connect this GitHub repository. Use `npm ci` for installation, `npm run build` for building, and `npx wrangler deploy --config dist/server/wrangler.json` as the deploy command. Add the existing `DB` binding if the dashboard prompts for it, using the exact database ID above.
 
-## Data and account access
+## Data and zone access
 
-Records are stored in your D1 database. Each account can read and change its own teams, acts, hadith research and reflections. Only the total act count is shared across accounts for the academy goal.
+Saved records are stored in the D1 database above, grouped by zone. Everyone choosing a zone can read its teams and saved acts and add entries to it. Team details, hadith research and Jalsa reflections remain changeable; saved act entries cannot be edited or removed. Zone choice is a preference, not authentication or an access restriction. The academy goal combines all zones.
 
-Passwords use PBKDF2-SHA256 with random per-account salts. Session tokens are random, stored as hashes in D1, and expire after seven days. Login and registration attempts are rate limited. Production cookies use Secure, HttpOnly and SameSite=Lax. There is no email service or automated password-reset flow in this version.
+The selected zone and unsaved act drafts are stored in browser localStorage. Clearing site data or using another browser means choosing a zone again. Drafts stay on the device until saved. There is no password, login or registration endpoint. Unused authentication tables from the earlier migration remain in D1 for migration history; this version neither reads nor writes them.
 
 The original Sites deployment has not been deleted. A private backup of its pre-migration team record is kept locally under the ignored `backups/` directory; student data, credentials and session state are never committed to this public repository.
 

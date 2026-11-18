@@ -1,6 +1,16 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {hashPassword,verifyPassword,digest,randomToken,sameOrigin,sessionToken,sessionCookie} from '../lib/security.ts';
-test('passwords are salted; only the correct password verifies',async()=>{const a=await hashPassword('A secure test password');const b=await hashPassword('A secure test password');assert.notEqual(a,b);assert.equal(await verifyPassword('A secure test password',a),true);assert.equal(await verifyPassword('wrong password',a),false);assert.equal(await verifyPassword('password','invalid'),false);});
-test('session tokens are unpredictable, validated and stored as digests',async()=>{const a=randomToken();const b=randomToken();assert.match(a,/^[a-f0-9]{64}$/);assert.notEqual(a,b);assert.notEqual(await digest(a),a);assert.equal(sessionToken('other=x; goodness_session='+a),a);assert.equal(sessionToken('goodness_session=arbitrary'),null);assert.match(sessionCookie(a,true),/HttpOnly; SameSite=Lax; Max-Age=604800; Secure/);});
-test('write requests require the application origin',()=>{assert.equal(sameOrigin(new Request('https://100actsofgood.hifz-helper.app/api/auth',{headers:{origin:'https://evil.example'}})),false);assert.equal(sameOrigin(new Request('https://100actsofgood.hifz-helper.app/api/auth')),false);assert.equal(sameOrigin(new Request('https://100actsofgood.hifz-helper.app/api/auth',{headers:{origin:'https://100actsofgood.hifz-helper.app'}})),true);});
+import {sameOrigin} from '../lib/security.ts';
+import {isZone,requestZone} from '../lib/zones.ts';
+test('only the three named zones are accepted',()=>{
+ assert.equal(isZone('zone-1'),true);assert.equal(isZone('zone-2'),true);assert.equal(isZone('zone-3'),true);
+ for(const value of [null,'','zone-4','account-id','Zone 1'])assert.equal(isZone(value),false);
+ assert.equal(requestZone(new Request('https://example.com',{headers:{'x-logbook-zone':'zone-2'}})),'zone-2');
+ assert.equal(requestZone(new Request('https://example.com')),null);
+});
+test('write requests require the application origin',()=>{
+ const url='https://100actsofgood.hifz-helper.app/api/logbook';
+ assert.equal(sameOrigin(new Request(url,{headers:{origin:'https://evil.example'}})),false);
+ assert.equal(sameOrigin(new Request(url)),false);
+ assert.equal(sameOrigin(new Request(url,{headers:{origin:'https://100actsofgood.hifz-helper.app'}})),true);
+});

@@ -15,6 +15,20 @@
       "when": 1795004363244,
       "tag": "0001_clammy_mesmero",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1795005527119,
+      "tag": "0002_saved-acts-readonly",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1795005910529,
+      "tag": "0003_shared-zones",
+      "breakpoints": true
     }
   ]
 }
