@@ -19,7 +19,8 @@ The account, database and custom domain are declared in `wrangler.jsonc`. The de
 ## Features
 
 - First-visit Zone 1, Zone 2 or Zone 3 selection, remembered in this browser. No registration, password or session is required. A Change zone button lets users choose again.
-- Team cover fields: team name, members, class and start date.
+- Exactly one shared logbook and 100-drop tracker per zone. No team creation or team selector.
+- Cover fields: team name, members, class and start date.
 - Numbered acts with circle, date, the act, how we lived it, inspiring hadith and full reference.
 - Browser drafts are saved per zone and team on the device and restored after reload. They are cleared only after the backend acknowledges saving.
 - Saved acts are read-only. Both the API and D1 triggers reject updates and deletion. Hadith text and references are preserved as snapshots.
@@ -52,7 +53,7 @@ npm test
 npm run build
 ```
 
-With the local server running, `node tests/integration.mjs` creates a local test team and verifies password-free zone access, zone scoping, origin validation, immutable entries, retry deduplication, the Team Log fields and numbered acts. It refuses non-loopback targets. Never run test record creation against production.
+With the local server running, `node tests/integration.mjs` adds a test act to a local zone and verifies password-free zone access, zone scoping, origin validation, immutable entries, retry deduplication, the Team Log fields and numbered acts. It refuses non-loopback targets. Never run test record creation against production.
 
 ## Deployment
 
@@ -68,7 +69,7 @@ Cloudflare Workers Builds can also connect this GitHub repository. Use `npm ci` 
 
 ## Data and zone access
 
-Saved records are stored in the D1 database above, grouped by zone. Everyone choosing a zone can read its teams and saved acts and add entries to it. Team details, hadith research and Jalsa reflections remain changeable; saved act entries cannot be edited or removed. Zone choice is a preference, not authentication or an access restriction. The academy goal combines all zones.
+Saved records are stored in the D1 database above, grouped by zone. Everyone choosing a zone opens the same shared logbook and tracker and can add entries to it. Additional team creation is rejected by the API. Cover details, hadith research and Jalsa reflections remain changeable; saved act entries cannot be edited or removed. Zone choice is a preference, not authentication or an access restriction. The academy goal combines all zones.
 
 The selected zone and unsaved act drafts are stored in browser localStorage. Clearing site data or using another browser means choosing a zone again. Drafts stay on the device until saved. There is no password, login or registration endpoint. Unused authentication tables from the earlier migration remain in D1 for migration history; this version neither reads nor writes them.
 

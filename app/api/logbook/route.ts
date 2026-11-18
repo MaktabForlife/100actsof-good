@@ -2,15 +2,14 @@ import { and, eq, inArray, desc, sql, count } from 'drizzle-orm';
 import { z } from 'zod';
 import { getDb } from '@/db';
 import { teams, acts, hadiths } from '@/db/schema';
-import { requestZone } from '@/lib/zones';
+import { requestZone, zoneLogbookId } from '@/lib/zones';
 import { sameOrigin } from '@/lib/security';
 import { circles } from '@/lib/logbook-types';
 export const dynamic = 'force-dynamic';
 const text = (max: number) => z.string().trim().min(1).max(max);
 const circle = z.enum(circles);
 const schema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('team'), name: text(80), members: z.string().trim().max(2000).default(''), className: z.string().trim().max(120).default(''), startedOn: z.string().max(10).default('') }),
-  z.object({ action: z.literal('team-details'), teamId: z.string().uuid(), name: text(80), members: z.string().trim().max(2000), className: z.string().trim().max(120), startedOn: z.string().max(10) }),
+  z.object({ action: z.literal('team-details'), teamId: z.string().uuid(), members: z.string().trim().max(2000), className: z.string().trim().max(120), startedOn: z.string().max(10) }),
   z.object({ action: z.literal('act'), id: z.string().uuid().optional(), draftId: z.string().uuid().optional(), teamId: z.string().uuid(), circle,
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v => {
       const d = new Date(v + 'T00:00:00Z');
@@ -29,7 +28,7 @@ export async function GET(request: Request) {
   if (!zone) return json({ error: 'Choose Zone 1, Zone 2, or Zone 3 to open your logbook.' }, 400);
   try {
     const db = getDb();
-    const ownTeams = await db.select().from(teams).where(eq(teams.userId, zone)).orderBy(teams.createdAt);
+    const ownTeams = await db.select().from(teams).where(and(eq(teams.id,zoneLogbookId(zone)),eq(teams.userId,zone)));
     const ids = ownTeams.map(t => t.id);
     const [ownActs, ownHadiths] = ids.length ? await Promise.all([
       db.select().from(acts).where(inArray(acts.teamId, ids)).orderBy(desc(acts.createdAt), desc(acts.date)),
@@ -47,21 +46,18 @@ export async function POST(request: Request) {
   let raw: unknown;
   try { const body = await request.text(); if (body.length > 65000) return json({ error: 'This entry is too long.' }, 413); raw = JSON.parse(body); }
   catch { return json({ error: 'Please check the entry and try again.' }, 400); }
+  if(raw && typeof raw==='object' && 'action' in raw && raw.action==='team')return json({error:'Each zone has one shared logbook. Creating teams is not available.'},405);
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return json({ error: parsed.error.issues[0]?.message || 'Please check your entry.' }, 400);
   const input = parsed.data;
   try {
     const db = getDb();
     if ('startedOn' in input && input.startedOn && (!/^\d{4}-\d{2}-\d{2}$/.test(input.startedOn) || isNaN(new Date(input.startedOn+'T00:00:00Z').getTime()) || new Date(input.startedOn+'T00:00:00Z').toISOString().slice(0,10)!==input.startedOn)) return json({error:'Please use a valid start date.'},400);
-    if (input.action === 'team') {
-      const id = crypto.randomUUID();
-      await db.insert(teams).values({ id, userId: zone, name: input.name, members: input.members, className: input.className, startedOn: input.startedOn, createdAt: new Date().toISOString() });
-      return json({ ok: true, id });
-    }
+    if(input.teamId!==zoneLogbookId(zone))return json({error:'Logbook not found.'},404);
     const [team] = await db.select().from(teams).where(and(eq(teams.id, input.teamId), eq(teams.userId, zone)));
-    if (!team) return json({ error: 'Team not found.' }, 404);
+    if (!team) return json({ error: 'Logbook not found.' }, 404);
     if (input.action === 'team-details') {
-      await db.update(teams).set({name:input.name,members:input.members,className:input.className,startedOn:input.startedOn}).where(eq(teams.id,team.id));
+      await db.update(teams).set({members:input.members,className:input.className,startedOn:input.startedOn}).where(eq(teams.id,team.id));
       return json({ok:true});
     }
     if (input.action === 'act') {
