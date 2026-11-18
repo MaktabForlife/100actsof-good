@@ -35,6 +35,7 @@ if (mode !== 'deploy') {
   };
   delete config.configPath;
   delete config.userConfigPath;
+  delete config.legacy_env;
   writeFileSync('dist/server/wrangler.preview.json', JSON.stringify(config, null, 2)+'\n');
   console.log('Built the dev Preview with its isolated D1 database and no production routes.');
 }
