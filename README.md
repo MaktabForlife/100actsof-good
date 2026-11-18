@@ -73,6 +73,8 @@ The script refuses any branch other than `dev`, verifies the Preview database, c
 
 Cloudflare Workers Builds Preview settings use `npm run build:preview` as the build command and `npm run deploy:preview` as the Preview command. The production branch stays `main` with production builds disabled. Preview builds track `dev`. The scripts deliberately provide no production publishing command.
 
+The Cloudflare Workers and Pages GitHub App must include `MaktabForlife/100actsof-good` among its selected repositories so pushes can start Preview builds.
+
 ## Data and zone access
 
 Saved records are stored in the D1 database above, grouped by zone. Everyone choosing a zone opens the same shared logbook and tracker and can add entries to it. Additional team creation is rejected by the API. Cover details, hadith research and Jalsa reflections remain changeable; saved act entries cannot be edited or removed. Zone choice is a preference, not authentication or an access restriction. The academy goal combines all zones.
