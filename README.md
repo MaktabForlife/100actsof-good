@@ -58,15 +58,20 @@ With the local server running, `node tests/integration.mjs` adds a test act to a
 
 ## Deployment
 
-Sign in to Wrangler with access to the account listed above. The required Cloudflare permissions are Workers Scripts Write, Workers Routes Write, D1 Write and Zone Read. DNS Write may be needed when managing DNS separately.
+All new work belongs on `dev` and is published only to the `dev` Cloudflare Preview. Production builds for `main` are disabled. Do not push or merge into `main` or deploy production without a new explicit instruction from the user.
+
+The Preview uses a separate D1 database, `acts-of-good-preview` (`d729bd01-d7c2-40dc-bdd0-4f14fa5b49c6`), in the same approved account. Its zone logbooks start empty. Preview saves never reach `acts-of-good-production`. Browser preferences and drafts are also separate because the Preview has its own hostname.
+
+Sign in to Cloudflare with access to the account listed above, then:
 
 ```sh
+git switch dev
 npm run deploy
 ```
 
-The deploy script verifies the approved account and database IDs, checks types and security tests, applies pending schema migrations to that exact database, builds the app, and deploys its custom domain. The initial migrations were applied in the account's D1 dashboard and recorded in `d1_migrations`.
+The script refuses any branch other than `dev`, verifies the Preview database, checks types, builds the app, creates `dist/server/wrangler.preview.json` without production routes, applies migrations only to the Preview database, and publishes the named `dev` Preview. It uses Wrangler 4.135.0 for Worker Previews while retaining the pinned application build toolchain.
 
-Cloudflare Workers Builds can also connect this GitHub repository. Use `npm ci` for installation, `npm run build` for building, and `npx wrangler deploy --config dist/server/wrangler.json` as the deploy command. Add the existing `DB` binding if the dashboard prompts for it, using the exact database ID above.
+Cloudflare Workers Builds Preview settings use `npm run build:preview` as the build command and `npm run deploy:preview` as the Preview command. The production branch stays `main` with production builds disabled. Preview builds track `dev`. The scripts deliberately provide no production publishing command.
 
 ## Data and zone access
 

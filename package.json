@@ -13,7 +13,9 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "node --import ./scripts/env.mjs node_modules/wrangler/bin/wrangler.js d1 migrations apply DB --local --config wrangler.jsonc",
-    "deploy": "node scripts/deploy.mjs",
+    "build:preview": "node scripts/preview.mjs build",
+    "deploy:preview": "node scripts/preview.mjs deploy",
+    "deploy": "node scripts/preview.mjs all",
     "cf:types": "node --import ./scripts/env.mjs node_modules/wrangler/bin/wrangler.js types --include-runtime=false"
   },
   "dependencies": {
