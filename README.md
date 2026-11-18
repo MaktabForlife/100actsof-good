@@ -30,6 +30,7 @@ The account, database, provider custom domain and SaaS Worker routes are declare
 - Mobile-first paper styling follows the PDF. On mobile, View tracker opens the numbered 100-drop tracker; desktop shows it below all entries.
 - The academy-wide shared goal counts completed acts across zones.
 - Hadith research collections and the three Jalsa Day Reflection prompts.
+- Sunnah.com search opens in a separate tab from the collection, hadith form or act form. Users copy a selected hadith on Sunnah.com and paste it into the draft fields manually; nothing is saved until they press Save.
 - CSV, complete JSON backup, and a printable report containing all saved fields.
 - Original Student Guidelines and Team Log downloads, including proofread reference text.
 

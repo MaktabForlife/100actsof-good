@@ -12,3 +12,11 @@
 .zone-option{width:100%;justify-content:space-between;padding:20px;font-size:20px;font-family:Georgia,serif;border:1px solid var(--gold)}
 .zone-label{white-space:nowrap;color:var(--plum);font-size:13px}
 .change-zone{white-space:nowrap;font-size:12px}
+
+.sunnah-search{padding:17px;border:1px solid var(--line);background:#eee6f2;margin:0 0 22px}
+.sunnah-search h3{display:flex;align-items:center;gap:8px;font:21px/1.4 var(--serif);margin-bottom:12px}
+.sunnah-search>label{display:block;font-size:11px;color:var(--plum);margin-bottom:6px}
+.sunnah-search-row{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+.sunnah-search input{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--gold);border-radius:3px;background:#fffdfd;color:var(--ink);font-size:16px;line-height:1.6}
+.sunnah-search p{font-size:11px;line-height:1.8;color:#80698a;margin-top:11px}
+@media(min-width:480px){.sunnah-search-row{grid-template-columns:minmax(0,1fr) auto}}
