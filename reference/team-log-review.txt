@@ -1,0 +1,14 @@
+The 100 Acts of Good - Team Log.pdf
+28 pages, reviewed against rendered pages 1, 2, 3 and 28, with text and entry numbering checked across all pages.
+
+Cover: Team name, team members, class, started on.
+Opening hadith: Sahih al-Bukhari 6464 and Sahih Muslim 783.
+Instructions: intention; one entry per act; circle; inspired hadith; how we lived it; full book and number reference.
+Progress page: Our 100 Drops, numbered 1-100.
+Entry pages 3-27: Act 01-Act 100, four entries per page.
+Each entry: Self / Family / Community; date; The act; How we lived it; The hadith that inspired it; Reference.
+Reflection page: Our favourite hadith (the hadith, reference, inspired act); The act that surprised us (what happened, what it taught us); A snag we hit (what was hard, what we learnt).
+
+Integration: preserve the original illustrations; extract the academy logo from the supplied cover; add team profile fields, separate entry fields, stable per-team act numbers, a numbered progress grid, aligned Jalsa prompts, and full report exports.
+The academy-wide 100-act goal from Student Guidelines remains separate from each team's own 100-entry tracker.
+No new example acts or hadith references are added beyond the two supplied PDFs.

@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "acts-of-good",
+  "account_id": "7f42bd46597bab9181b7a128a695f2cd",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "routes": [{ "pattern": "100actsofgood.hifz-helper.app", "custom_domain": true }],
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "acts-of-good-production",
+    "database_id": "35e77ced-b8c0-4fdd-bbb7-3c52d5a0e720",
+    "migrations_dir": "drizzle"
+  }],
+  "assets": { "directory": "./public", "binding": "ASSETS" }
+}
